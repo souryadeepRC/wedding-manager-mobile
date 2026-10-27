@@ -52,14 +52,13 @@ export function GuestListScreen() {
     () => filterGuests(inTab, search, filters),
     [inTab, search, filters],
   );
+  // Each tab shows how many people are invited to that event (sum of guest counts), ignoring search and filters.
   const tabs = EVENT_TYPES.map((e) => ({
     value: e.value,
     label: e.label,
-    count: filterGuests(
-      all.filter((g) => g.eventType === e.value),
-      search,
-      filters,
-    ).length,
+    count: all
+      .filter((g) => g.eventType === e.value)
+      .reduce((sum, g) => sum + g.guestCount, 0),
   }));
   const people = all.reduce((sum, g) => sum + g.guestCount, 0);
   const narrowed = activeFilterCount(filters) > 0 || search.trim().length > 0;
